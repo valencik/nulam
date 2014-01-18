@@ -32,7 +32,8 @@
     var methods = {
         REGEX: 0,
         MATH: 1,
-        BOOLEAN: 2
+        BOOLEAN: 2,
+        OEIS: 3
     };
 
     function criteriaRegex(){
@@ -88,6 +89,8 @@
     var rows = 10;
     var columns = 20;
 
+    var oesiTimeout;
+
     function onInput(){
         var userInput = input.val();
         if(userInput.length){
@@ -98,6 +101,37 @@
                     break;
                 case methods.BOOLEAN:
                     criteria = criteriaBoolean();
+                    break;
+                case methods.OEIS:
+
+                    criteria = {
+                        smartInput : userInput
+                    };
+                    if(oesiTimeout){
+                        clearTimeout(oesiTimeout);
+
+                    }
+                    oesiTimeout = setTimeout(function(){
+                        input.addClass('loading');
+                        $.ajax({
+                            type: "POST",
+                            url: "/smartGrab",
+                            data: criteria,
+                            dataType: "json",
+                            success: function(smartResults){
+                                input.removeClass('loading');
+                                console.log("AJAX", smartResults);
+                                var criteria = criteriaOEIS();
+                                criteria.input = smartResults;
+                                startVisualization(criteria);
+                            },
+                            error: function(error){
+                                input.removeClass('loading');
+                                throw "Ajax error!";
+                            }
+                        });
+                    }, 1000);
+
                     break;
                 case methods.REGEX:
                 default:
@@ -110,25 +144,7 @@
     }
 
     function onSmartInput(){
-        var criteria = {
-            smartInput : smartInput.val()
-        };
-       
-        if(criteria.smartInput.length){
-            //Jquery/AJAX POST of request
-            $.ajax({
-                type: "POST",
-                url: "/smartGrab",
-                data: criteria,
-                dataType: "json",
-                success: function(smartResults){
-                    console.log("AJAX", smartResults);
-                    var criteria = criteriaOEIS();
-                    criteria.input = smartResults;
-                    startVisualization(criteria);
-                }
-            });
-        }
+
     }
 
     function startVisualization(criteria){
