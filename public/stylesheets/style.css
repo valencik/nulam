@@ -12,6 +12,10 @@ a {
     text-align: center;
 }
 
+#message.invalid {
+    color:red;
+}
+
 #squares {
   width: 1000px;
   margin: auto;
