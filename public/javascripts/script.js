@@ -3,7 +3,7 @@
     $(document).ready(function(){
         squares = $('#squares');
         input = $('#input');
-        smartinput = $('#smart-input');
+        smartInput = $('#smart-input');
         method = $('#method');
         message = $('#message');
 
@@ -11,7 +11,7 @@
 
         input.keyup(onInput);
         method.change(onInput);
-        smartinput.keydown(function( event ) {
+        smartInput.keydown(function( event ) {
           if ( event.which == 13 ) {
           onSmartInput();
           }
@@ -25,7 +25,7 @@
     //dom elements
     var squares;
     var input;
-    var smartinput;
+    var smartInput;
     var method;
     var message;
 
@@ -37,8 +37,8 @@
 
     function criteriaRegex(){
         return {
-            type:0,
-            input:"",
+            type: 0,
+            input: "",
             test: function(value){
                 return new RegExp(this.input).test(value);
             }
@@ -47,8 +47,8 @@
 
     function criteriaMath(){
         return {
-            type:1,
-            input:"",
+            type: 1,
+            input: "",
 
             test: function(value, index, x, y){
                 var thisCriteria = this.input.replace(/n/g, index.toString());
@@ -62,15 +62,25 @@
 
     function criteriaBoolean(){
         return {
-            type:1,
-            input:"",
-            target:false,
+            type: 1,
+            input: "",
+            target: true,
             test: function(value, index, x, y){
                 var thisCriteria = this.input.replace(/n/g, index.toString());
                 thisCriteria = thisCriteria.replace(/x/g, value);
                 thisCriteria = thisCriteria.replace(/r/g, y);
                 thisCriteria = thisCriteria.replace(/c/g, x);
                 return eval(thisCriteria) === this.target;
+            }
+        }
+    }
+
+    function criteriaOEIS(){
+        return {
+            type: 1,
+            input: [],
+            test: function(value){
+                return $.inArray(parseFloat(value), this.input) !== -1;
             }
         }
     }
@@ -101,9 +111,10 @@
 
     function onSmartInput(){
         var criteria = {
-            smartinput : smartinput.val()};
+            smartInput : smartInput.val()
+        };
        
-        if(criteria.smartinput.length){
+        if(criteria.smartInput.length){
             //Jquery/AJAX POST of request
             $.ajax({
                 type: "POST",
@@ -111,7 +122,11 @@
                 data: JSON.stringify(criteria),
                 dataType: "json",
                 success: function(smartResults){
-                  console.log("AJAX", smartResults)}
+                    console.log("AJAX", smartResults);
+                    var criteria = criteriaOEIS();
+                    criteria.input = smartResults;
+                    startVisualization(criteria);
+                }
             });
         }
     }
