@@ -3,6 +3,7 @@
     $(document).ready(function(){
         squares = $('#squares');
         input = $('#input');
+        smartinput = $('#smart-input');
         method = $('#method');
         message = $('#message');
 
@@ -10,6 +11,11 @@
 
         input.keyup(onInput);
         method.change(onInput);
+        smartinput.keydown(function( event ) {
+          if ( event.which == 13 ) {
+          onSmartInput();
+          }
+        });
 
         onInput();
     });
@@ -19,6 +25,7 @@
     //dom elements
     var squares;
     var input;
+    var smartinput;
     var method;
     var message;
 
@@ -89,6 +96,23 @@
             }
             criteria.input = userInput;
             startVisualization(criteria);
+        }
+    }
+
+    function onSmartInput(){
+        var criteria = {
+            smartinput : smartinput.val()};
+       
+        if(criteria.smartinput.length){
+            //Jquery/AJAX POST of request
+            $.ajax({
+                type: "POST",
+                url: "/smartGrab",
+                data: JSON.stringify(criteria),
+                dataType: "json",
+                success: function(smartResults){
+                  console.log("AJAX", smartResults)}
+            });
         }
     }
 
