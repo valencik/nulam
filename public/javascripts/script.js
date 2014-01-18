@@ -119,7 +119,7 @@
             $.ajax({
                 type: "POST",
                 url: "/smartGrab",
-                data: JSON.stringify(criteria),
+                data: criteria,
                 dataType: "json",
                 success: function(smartResults){
                     console.log("AJAX", smartResults);

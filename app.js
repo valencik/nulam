@@ -37,16 +37,23 @@ app.get('/', routes.index);
 
 app.post('/smartGrab', function(req, res){
   console.log("Recieved :", req.body);
-  // hardcoded OEIS grab
-  var domain = 'http://oeis.org/search?q=id:A000040'
+
+  var param = req.body.smartInput;
+  console.log(param);
+
+  if(/^A\d{6}$/.test(param)){
+      param = "id:"+param;
+  }
+
+  var domain = 'http://oeis.org/search?q=' + param;
   request(domain, function gotHTML(err, resp, html) {
-    if (err) return console.error(err)
-    var parsedHTML = $.load(html)
+    if (err) return console.error(err);
+    var parsedHTML = $.load(html);
   
     var table710ttnums = parsedHTML('td').filter(function(i, el) {
       // integer sequence is in child of td(width=710)
       return $(this).attr('width') === '710';
-    }).children().first().text()
+    }).children().first().text();
     console.log("OEIS int sequence: ", table710ttnums);
     res.send("[" + table710ttnums + "]");
   });
