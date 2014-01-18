@@ -6,56 +6,12 @@
         method = $('#method');
         message = $('#message');
 
-        input.keyup(function(){
-            if(method.val() == methods.REGEX){
-                try {
-                    criteria = new RegExp($(this).val());
-                    runVisualization();
-                } catch (e) {
-                    message.addClass('invalid').text('invalid');
-                }
-            } else if(method.val() == methods.MATH){
-                criteria = [];
-                try {
-                    var equation = $(this).val();
-                    var conditions = equation.split(/&&|\|\|/);
-                    $(conditions).each(function(){
-                        var condition = this.trim();
-                        var operator = condition.match(/==|>=|<=|>|</g);
-                        if(operator.length === 1){
-                            var terms = condition.split(new RegExp(operator));
-                            if(terms.length == 2){
-                                $(terms).each(function(i){
-                                    terms[i] = this.trim();
-                                });
-                                criteria.push({
-                                    lhTerm: terms[0],
-                                    operator: operator[0],
-                                    rhTerm: terms[1]
-                                });
-                            } else {
-                                throw "Invalid number of terms";
-                            }
-                        } else {
-                            throw "Invalid number of operators";
-                        }
-                        runVisualization();
-                    });
-                } catch (e){
-                    message.addClass('invalid').text('invalid');
-                }
-            }
-        });
+        buildData();
 
-        for(var i = 0; i < 200; i++){
-            data.push(i);
-        }
+        input.keyup(onInput);
+        method.change(onInput);
 
-        for(var elem in data){
-            squares.append('<div class="square red">' + (parseInt(elem) + 1) + '</div>');
-        }
-
-        runVisualization();
+        onInput();
     });
 
     var data = [];
@@ -66,62 +22,72 @@
     var method;
     var message;
 
-    var criteria;
-
     var methods = {
         REGEX: 0,
-        MATH: 1
+        MATH: 1,
+        BOOLEAN: 2
     };
 
-    function runVisualization(){
+    var rows = 10;
+    var columns = 20;
+
+    function onInput(){
+        var criteria = input.val();
+        if(criteria.length){
+            if(method.val() == methods.REGEX){
+                startVisualization(new RegExp(criteria));
+            } else if(method.val() == methods.MATH || method.val() == methods.BOOLEAN){
+                startVisualization(criteria);
+            }
+        }
+    }
+
+    function startVisualization(criteria){
+        try {
+            runVisualization(criteria);
+        } catch (e) {
+            message.addClass('invalid').text('invalid');
+            squares.find('.square').addClass('red').removeClass('green');
+        }
+    }
+
+    function runVisualization(criteria){
         var matches = 0;
-        squares.find('.square').each(function(){
+        squares.find('.square').each(function(i){
             var square = $(this);
             square.addClass('red').removeClass('green');
-            var content = square.text();
-            if(method.val() == methods.REGEX && criteria.test(content)){
+            function match(){
                 square.addClass('green').removeClass('red');
                 matches++;
-            } else if(method.val() == methods.MATH) {
-                var valid = true;
-                $(criteria).each(function(){
-                    var lhTerm = parseFloat(this.lhTerm.replace('x', content));
-                    var rhTerm = parseFloat(this.rhTerm.replace('x', content));
-                    switch(this.operator){
-                        case "==":
-                            if(!(lhTerm == rhTerm)){
-                                return valid = false;
-                            }
-                            break;
-                        case ">=":
-                            if(!(lhTerm >= rhTerm)){
-                                return valid = false;
-                            }
-                            break;
-                        case "<=":
-                            if(!(lhTerm <= rhTerm)){
-                                return valid = false;
-                            }
-                            break;
-                        case ">":
-                            if(!(lhTerm > rhTerm)){
-                                return valid = false;
-                            }
-                            break;
-                        case "<":
-                            if(!(lhTerm < rhTerm)){
-                                return valid = false;
-                            }
-                            break;
-                    }
-                });
-                if(valid){
-                    square.addClass('green').removeClass('red');
-                    matches++;
+            }
+            var content = square.text();
+            if(method.val() == methods.REGEX && criteria.test(content)){
+                match();
+            } else if(method.val() == methods.MATH || method.val() == methods.BOOLEAN){
+                var row = Math.floor(i / columns) + 1;
+                var column = (i % columns) + 1;
+                var thisCriteria = criteria.replace(/n/g, i.toString());
+                thisCriteria = thisCriteria.replace(/x/g, content);
+                thisCriteria = thisCriteria.replace(/r/g, row);
+                thisCriteria = thisCriteria.replace(/c/g, column);
+                if(method.val() == methods.MATH && eval(thisCriteria) === parseFloat(content)){
+                    match();
+                }
+                if(method.val() == methods.BOOLEAN && eval(thisCriteria) === true) {
+                    match();
                 }
             }
         });
         message.removeClass('invalid').text(matches + ' matches');
     }
 
+    function buildData(){
+        for(var i = 0; i < 200; i++){
+            data.push(i);
+        }
+
+        for(var elem in data){
+            squares.append('<div class="square red">' + (parseInt(elem) + 1) + '</div>');
+        }
+    }
 }());
