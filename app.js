@@ -35,22 +35,23 @@ if ('development' == app.get('env')) {
 // routes
 app.get('/', routes.index);
 
+app.post('/smartGrab', function(req, res){
+  console.log("Recieved :", req.body);
+  // hardcoded OEIS grab
+  var domain = 'http://oeis.org/search?q=id:A000040'
+  request(domain, function gotHTML(err, resp, html) {
+    if (err) return console.error(err)
+    var parsedHTML = $.load(html)
+  
+    var table710ttnums = parsedHTML('td').filter(function(i, el) {
+      // integer sequence is in child of td(width=710)
+      return $(this).attr('width') === '710';
+    }).children().first().text()
+    console.log("OEIS int sequence: ", table710ttnums);
+    res.send("[" + table710ttnums + "]");
+  });
+});
 
-// cheerio scrape for OEIS
-function gotHTML(err, resp, html) {
-  if (err) return console.error(err)
-  var parsedHTML = $.load(html)
-
-  var table710ttnums = parsedHTML('td').filter(function(i, el) {
-    // integer sequence is in child of td(width=710)
-    return $(this).attr('width') === '710';
-  }).children().first().text()
-  console.log("OEIS int sequence: ", table710ttnums);
-}
-
-// hardcoded OEIS grab
-var domain = 'http://oeis.org/search?q=id:A000040'
-request(domain, gotHTML)
 
 
 // Start server, print out listen info
