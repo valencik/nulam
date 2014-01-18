@@ -7,11 +7,23 @@ a {
   color: #00B7FF;
 }
 
+#squares {
+  width: 1000px;
+  margin: auto;
+}
+
 .square {
-  height: 10px;
-  width: 10px;
-  background: red;
+  height: 96px;
+  width: 96px;
   margin: 2px;
   display: inline-block;
+}
+
+.red {
+  background: red;
+}
+
+.green {
+  background: green;
 }
 
