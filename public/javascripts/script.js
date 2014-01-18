@@ -3,6 +3,7 @@
     $(document).ready(function(){
         squares = $('#squares');
         input = $('#input');
+        smartInput = $('#smart-input');
         method = $('#method');
         message = $('#message');
 
@@ -10,6 +11,11 @@
 
         input.keyup(onInput);
         method.change(onInput);
+        smartInput.keydown(function( event ) {
+          if ( event.which == 13 ) {
+          onSmartInput();
+          }
+        });
 
         onInput();
     });
@@ -19,6 +25,7 @@
     //dom elements
     var squares;
     var input;
+    var smartInput;
     var method;
     var message;
 
@@ -28,17 +35,99 @@
         BOOLEAN: 2
     };
 
+    function criteriaRegex(){
+        return {
+            type: 0,
+            input: "",
+            test: function(value){
+                return new RegExp(this.input).test(value);
+            }
+        }
+    }
+
+    function criteriaMath(){
+        return {
+            type: 1,
+            input: "",
+
+            test: function(value, index, x, y){
+                var thisCriteria = this.input.replace(/n/g, index.toString());
+                thisCriteria = thisCriteria.replace(/x/g, value);
+                thisCriteria = thisCriteria.replace(/r/g, y);
+                thisCriteria = thisCriteria.replace(/c/g, x);
+                return eval(thisCriteria) === parseFloat(value);
+            }
+        }
+    }
+
+    function criteriaBoolean(){
+        return {
+            type: 1,
+            input: "",
+            target: true,
+            test: function(value, index, x, y){
+                var thisCriteria = this.input.replace(/n/g, index.toString());
+                thisCriteria = thisCriteria.replace(/x/g, value);
+                thisCriteria = thisCriteria.replace(/r/g, y);
+                thisCriteria = thisCriteria.replace(/c/g, x);
+                return eval(thisCriteria) === this.target;
+            }
+        }
+    }
+
+    function criteriaOEIS(){
+        return {
+            type: 1,
+            input: [],
+            test: function(value){
+                return $.inArray(parseFloat(value), this.input) !== -1;
+            }
+        }
+    }
+
     var rows = 10;
     var columns = 20;
 
     function onInput(){
-        var criteria = input.val();
-        if(criteria.length){
-            if(method.val() == methods.REGEX){
-                startVisualization(new RegExp(criteria));
-            } else if(method.val() == methods.MATH || method.val() == methods.BOOLEAN){
-                startVisualization(criteria);
+        var userInput = input.val();
+        if(userInput.length){
+            var criteria;
+            switch(parseInt(method.val())){
+                case methods.MATH:
+                    criteria = criteriaMath();
+                    break;
+                case methods.BOOLEAN:
+                    criteria = criteriaBoolean();
+                    break;
+                case methods.REGEX:
+                default:
+                    criteria = criteriaRegex();
+
             }
+            criteria.input = userInput;
+            startVisualization(criteria);
+        }
+    }
+
+    function onSmartInput(){
+        var criteria = {
+            smartInput : smartInput.val()
+        };
+       
+        if(criteria.smartInput.length){
+            //Jquery/AJAX POST of request
+            $.ajax({
+                type: "POST",
+                url: "/smartGrab",
+                data: criteria,
+                dataType: "json",
+                success: function(smartResults){
+                    console.log("AJAX", smartResults);
+                    var criteria = criteriaOEIS();
+                    criteria.input = smartResults;
+                    startVisualization(criteria);
+                }
+            });
         }
     }
 
@@ -61,21 +150,10 @@
                 matches++;
             }
             var content = square.text();
-            if(method.val() == methods.REGEX && criteria.test(content)){
+            var y = Math.floor(i / columns) + 1;
+            var x = (i % columns) + 1;
+            if(criteria.test(content, i, x, y)){
                 match();
-            } else if(method.val() == methods.MATH || method.val() == methods.BOOLEAN){
-                var row = Math.floor(i / columns) + 1;
-                var column = (i % columns) + 1;
-                var thisCriteria = criteria.replace(/n/g, i.toString());
-                thisCriteria = thisCriteria.replace(/x/g, content);
-                thisCriteria = thisCriteria.replace(/r/g, row);
-                thisCriteria = thisCriteria.replace(/c/g, column);
-                if(method.val() == methods.MATH && eval(thisCriteria) === parseFloat(content)){
-                    match();
-                }
-                if(method.val() == methods.BOOLEAN && eval(thisCriteria) === true) {
-                    match();
-                }
             }
         });
         message.removeClass('invalid').text(matches + ' matches');
