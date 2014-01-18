@@ -1,38 +1,53 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #EEE8D5;
 }
-
 a {
   color: #00B7FF;
 }
-
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+  font-size: 2.5em;
+}
+input {
+  height: 25px;
+  width: 200px;
+  font-size: 15px;
+}
+#input {
+  width: 250px;
+  margin: auto;
+}
 #form {
-    margin:auto;
-    text-align: center;
+  margin: 0 auto 20px 0;
+  /*text-align: center;*/
 }
-
-#message.invalid {
-    color:red;
+#smartform {
+  margin: 0 auto 10px auto;
+  width: 1000px;
+  text-align: right;
 }
-
+#message {
+  margin: 0 0 0 10px;
+}
+#message .invalid {
+  color: red;
+}
 #squares {
   width: 1000px;
   margin: auto;
 }
-
-.square {
+#squares .square {
   height: 46px;
   width: 46px;
   margin: 2px;
   display: inline-block;
 }
-
-.red {
-  background: red;
+#squares .square.red {
+  background: #E80939;
 }
-
-.green {
-  background: green;
+#squares .square.green {
+  background: #12A106;
 }
-
