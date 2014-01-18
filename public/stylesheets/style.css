@@ -7,14 +7,23 @@ a {
   color: #00B7FF;
 }
 
+#form {
+    margin:auto;
+    text-align: center;
+}
+
+#message.invalid {
+    color:red;
+}
+
 #squares {
   width: 1000px;
   margin: auto;
 }
 
 .square {
-  height: 96px;
-  width: 96px;
+  height: 46px;
+  width: 46px;
   margin: 2px;
   display: inline-block;
 }
