@@ -1,21 +1,21 @@
-
 /**
- * Module dependencies.
+ * nUlam - A pattern visualization tool
+ * 
+ * Created in a Open Volta Hackathon, Jan 2014
+ * Andrew Valencik, Geoff Robb, Nate Myles
+ *
  */
 
-//Standard requires for express app
+// dependencies
 var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
-
-//For scraping with Cheerio
 var $ = require('cheerio')
 var request = require('request')
 
+// environment setup
 var app = express();
-
-// all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -32,10 +32,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+// routes
 app.get('/', routes.index);
 
 
-//Cheerio grab for OEIS
+// cheerio scrape for OEIS
 function gotHTML(err, resp, html) {
   if (err) return console.error(err)
   var parsedHTML = $.load(html)
@@ -47,10 +48,12 @@ function gotHTML(err, resp, html) {
   console.log("OEIS int sequence: ", table710ttnums);
 }
 
+// hardcoded OEIS grab
 var domain = 'http://oeis.org/search?q=id:A000040'
 request(domain, gotHTML)
 
 
+// Start server, print out listen info
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
