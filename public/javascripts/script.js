@@ -10,7 +10,7 @@
                 regex = new RegExp($(this).val());
                 runRegex();
             } catch (e) {
-                message.text('invalid');
+                message.addClass('invalid').text('invalid');
             }
         });
 
@@ -25,11 +25,12 @@
 
     var data = [];
 
+    //dom elements
     var squares;
     var input;
     var message;
 
-    var regex = /^[1-5]|[2]$/;
+    var regex;
 
     function runRegex(){
         var matches = 0;
@@ -42,7 +43,7 @@
                 matches++;
             }
         });
-        message.text(matches + ' matches');
+        message.removeClass('invalid').text(matches + ' matches');
     }
 
 }());
