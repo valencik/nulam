@@ -12,7 +12,11 @@ block content
   h1#page-title nUlam Visulaizer
   div#form
     div#testing-shit
-      input#regex-input(value="^[468]8$|^[579]3$|^1[24]9|^1[5][012]|132")
+      input#input(value="^[468]8$|^[579]3$|^1[24]9|^1[5][012]|132")
+      select#method
+        option(value=0)="RegEx"
+        option(value=1)="Math"
+        option(value=2)="Boolean"
     #verify-message
       span#message
   div#smartform

@@ -1,12 +1,14 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "nUlam",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
     "express": "3.4.8",
-    "jade": "*"
+    "jade": "*",
+    "request": "*",
+    "cheerio": "*"
   }
 }
