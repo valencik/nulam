@@ -6,3 +6,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+.square {
+  height: 10px;
+  width: 10px;
+  background: red;
+  margin: 2px;
+  display: inline-block;
+}
+
