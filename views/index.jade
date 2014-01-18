@@ -13,22 +13,16 @@ html
 block content
   h1#page-title nUlam Visulaizer
   div#form.container
-    div.row  
-      div.col-md-4
-      div.col-md-4
-        input#input(value="^[468]9$|^[579]2$|^1[4]9|^1[5][012]|133|128")
-      div.col-md-4
-        select#method
+    div.wrapper
+      div.col-md-10
+        input#input.form-control(value="^[468]9$|^[579]2$|^1[4]9|^1[5][012]|133|128")
+      div.col-md-2
+        select#method.form-control
           option(value=0)="RegEx"
           option(value=1)="Math"
           option(value=2)="Boolean"
   div.row
-    div.col-md-4
-    div.col-md-4
-      div#verify-message
-        span#message
-    div.col-md-4
-  div#smartform
-    input#smart-input(placeholder="Import function")
-  #squares
+    div#verify-message
+      span#message
+  #squares.wrapper
 
