@@ -20,7 +20,7 @@ input {
     font-size: 15px;
 }
 
-#regex-input {
+#input {
     width: 250px;
     margin: auto;
 }
@@ -41,30 +41,32 @@ input {
 }
 
 #message {
-    margin: 0 0 0 10px;
-}
-
-#message.invalid {
+  margin: 0 0 0 10px;
+  .invalid {
     color:red;
+  }
 }
 
 #squares {
   width: 1000px;
   margin: auto;
+
+  .square {
+    height: 46px;
+    width: 46px;
+    margin: 2px;
+    display: inline-block;
+
+    &.red {
+      background: #E80939;
+    }
+
+    &.green {
+      background: #12A106;
+    }
+  }
 }
 
-.square {
-  height: 46px;
-  width: 46px;
-  margin: 2px;
-  display: inline-block;
-}
 
-.red {
-  background: #E80939;
-}
 
-.green {
-  background: #12A106;
-}
 

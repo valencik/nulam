@@ -1,6 +1,7 @@
 # Node
 node_modules
 node_output.log
+npm-debug.log
 
 # Linux
 *.swp
@@ -16,6 +17,7 @@ Icon
 /*.sublime-project
 *.sublime-workspace
 *.sublime-project
-.idea/*
 
+# IntelliJ
+.idea/*
 nulam.iml
