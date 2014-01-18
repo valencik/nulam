@@ -17,23 +17,26 @@ input {
   font-size: 15px;
 }
 #input {
-  width: 250px;
+  width: 100%;
   margin: auto;
+  text-align: center;
 }
-#form {
-  margin: 0 auto 20px 0;
-  /*text-align: center;*/
+#method {
+  font-size: 25px;
+  margin: 1.25px 0 0 -15px;
+}
+#verify-message {
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+}
+#message.invalid {
+  color: red;
 }
 #smartform {
   margin: 0 auto 10px auto;
   width: 1000px;
   text-align: right;
-}
-#message {
-  margin: 0 0 0 10px;
-}
-#message .invalid {
-  color: red;
 }
 #squares {
   width: 1000px;
