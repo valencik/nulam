@@ -3,7 +3,6 @@
     $(document).ready(function(){
         squares = $('#squares');
         input = $('#input');
-        smartInput = $('#smart-input');
         method = $('#method');
         message = $('#message');
 
@@ -11,12 +10,12 @@
         populateSquares();
 
         input.keyup(onInput);
-        method.change(onInput);
-        smartInput.keydown(function( event ) {
-          if ( event.which == 13 ) {
-          onSmartInput();
-          }
+        method.change(function(event){
+           if($(this).val() == methods.OEIS){
+               event.stopImmediatePropagation();
+           }
         });
+        method.change(onInput);
 
         onInput();
     });
@@ -26,7 +25,6 @@
     //dom elements
     var squares;
     var input;
-    var smartInput;
     var method;
     var message;
 
@@ -51,13 +49,35 @@
         return {
             type: 1,
             input: "",
-
+            targets: {
+                value:0,
+                index:1,
+                row:2,
+                column:3
+            },
+            target:2,
             test: function(value, index, x, y){
+                var checkValue;
+                switch(this.target){
+                    case this.targets.index:
+                        checkValue = index;
+                        break;
+                    case this.targets.row:
+                        checkValue = y;
+                        break;
+                    case this.target.column:
+                        checkValue = x;
+                        break;
+                    case this.targets.value:
+                    default:
+                        checkValue = parseFloat(value);
+                        break;
+                }
                 var thisCriteria = this.input.replace(/n/g, index.toString());
                 thisCriteria = thisCriteria.replace(/x/g, value);
                 thisCriteria = thisCriteria.replace(/r/g, y);
                 thisCriteria = thisCriteria.replace(/c/g, x);
-                return eval(thisCriteria) === parseFloat(value);
+                return eval(thisCriteria) === checkValue;
             }
         }
     }
@@ -142,10 +162,6 @@
             criteria.input = userInput;
             startVisualization(criteria);
         }
-    }
-
-    function onSmartInput(){
-
     }
 
     function startVisualization(criteria){
