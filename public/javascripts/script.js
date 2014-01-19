@@ -7,7 +7,8 @@
         method = $('#method');
         message = $('#message');
 
-        buildData();
+        buildDefaultData();
+        populateSquares();
 
         input.keyup(onInput);
         method.change(onInput);
@@ -32,7 +33,8 @@
     var methods = {
         REGEX: 0,
         MATH: 1,
-        BOOLEAN: 2
+        BOOLEAN: 2,
+        OEIS: 3
     };
 
     function criteriaRegex(){
@@ -85,8 +87,10 @@
         }
     }
 
-    var rows = 10;
-    var columns = 20;
+    var rows = 21;
+    var columns = 21;
+
+    var oesiTimeout;
 
     function onInput(){
         var userInput = input.val();
@@ -99,6 +103,37 @@
                 case methods.BOOLEAN:
                     criteria = criteriaBoolean();
                     break;
+                case methods.OEIS:
+
+                    criteria = {
+                        smartInput : userInput
+                    };
+                    if(oesiTimeout){
+                        clearTimeout(oesiTimeout);
+
+                    }
+                    oesiTimeout = setTimeout(function(){
+                        input.addClass('loading');
+                        $.ajax({
+                            type: "POST",
+                            url: "/smartGrab",
+                            data: criteria,
+                            dataType: "json",
+                            success: function(smartResults){
+                                input.removeClass('loading');
+                                console.log("AJAX", smartResults);
+                                var criteria = criteriaOEIS();
+                                criteria.input = smartResults;
+                                startVisualization(criteria);
+                            },
+                            error: function(error){
+                                input.removeClass('loading');
+                                throw "Ajax error!";
+                            }
+                        });
+                    }, 1000);
+
+                    break;
                 case methods.REGEX:
                 default:
                     criteria = criteriaRegex();
@@ -110,25 +145,7 @@
     }
 
     function onSmartInput(){
-        var criteria = {
-            smartInput : smartInput.val()
-        };
-       
-        if(criteria.smartInput.length){
-            //Jquery/AJAX POST of request
-            $.ajax({
-                type: "POST",
-                url: "/smartGrab",
-                data: criteria,
-                dataType: "json",
-                success: function(smartResults){
-                    console.log("AJAX", smartResults);
-                    var criteria = criteriaOEIS();
-                    criteria.input = smartResults;
-                    startVisualization(criteria);
-                }
-            });
-        }
+
     }
 
     function startVisualization(criteria){
@@ -159,13 +176,15 @@
         message.removeClass('invalid').text(matches + ' matches');
     }
 
-    function buildData(){
-        for(var i = 0; i < 200; i++){
+    function buildDefaultData(){
+        for(var i = 0; i < 441; i++){
             data.push(i);
         }
+    }
 
-        for(var elem in data){
-            squares.append('<div class="square red">' + (parseInt(elem) + 1) + '</div>');
-        }
+    function populateSquares(){
+        $(data).each(function(){
+            squares.append('<div class="square red" title="' + (parseInt(this) + 1) + '">' + (parseInt(this) + 1) + '</div>');
+        });
     }
 }());
