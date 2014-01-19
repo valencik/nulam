@@ -24,9 +24,9 @@ nUlamdbProvider.prototype.findAll = function(query, callback) {
       if( error ) callback(error)
       else {
         // Parse the JSON formated string into a true JSON object
-	parsedQuery=JSON.parse(query);
+	//parsedQuery=JSON.parse(query);
         // Pass JSON object to mongo database with find() call
-        nUlamdb_collection.find(parsedQuery).limit(13).toArray(function(error, results) {
+        nUlamdb_collection.find(query).limit(1).toArray(function(error, results) {
           if( error ) callback(error)
           else callback(null, results)
         });
@@ -37,7 +37,7 @@ nUlamdbProvider.prototype.findAll = function(query, callback) {
 
 //save new nUlamdb_item
 nUlamdbProvider.prototype.save = function(nUlamdb_items, callback) {
-    console.log("nUlamdb_items :" + JSON.stringify(nUlamdb_items));
+    console.log("##nUlamDB saved :" + JSON.stringify(nUlamdb_items));
     this.getCollection(nUlamdb_items, function(error, nUlamdb_collection) {
       if( error ) callback(error)
       else {
