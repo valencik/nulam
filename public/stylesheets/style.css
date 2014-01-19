@@ -15,6 +15,9 @@ h1 {
   width: 1000px;
   margin: auto;
 }
+#input {
+  text-align: center;
+}
 #verify-message {
   width: 100%;
   text-align: center;
@@ -28,11 +31,18 @@ h1 {
   width: 1000px;
   text-align: right;
 }
+#squares {
+  text-align: center;
+}
 #squares .square {
   height: 46px;
   width: 46px;
   margin: 2px;
   display: inline-block;
+}
+#squares .square.pixel {
+  height: 1px;
+  width: 1px;
 }
 #squares .square.red {
   background: #E80939;
