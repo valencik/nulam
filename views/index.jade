@@ -23,7 +23,7 @@ block content
           option(value=2)="Boolean"
           option(value=3)="OEIS"
   div#advanced.wrapper.row
-    div.row.math
+    div.wrapper.row.math
       div.col-md-1
         label.label.label-primary Target
       div.col-md-11
@@ -35,19 +35,19 @@ block content
   div.row
     div#verify-message
       span#message
-  //div.row
-    div.col-md-8
+  div.row.wrapper
     div.col-md-2
       select#blocksize.form-control
-        option(value=0)="Default"
-        option(value=1)="Pixel"
-        option(value=2)="X Small"
-        option(value=3)="Small"
-        option(value=4)="Medium"
-        option(value=5)="Large"
-        option(value=6)="X Large"
-    div.col-md-2
-      | Display Block Contents: 
-      input(type='checkbox', checked=true)
+        //option(value="pixel")="Pixel"
+        option(value="xsmall")="X Small"
+        option(value="small")="Small"
+        option(value="" selected="selected")="Default"
+        option(value="medium")="Medium"
+        option(value="large")="Large"
+        option(value="xlarge")="X Large"
+        option(value="spiral")="Spiral"
+    div.col-md-4
+      label Display Block Contents:
+      input#display-content(type='checkbox', checked=true)
   #squares.wrapper
 

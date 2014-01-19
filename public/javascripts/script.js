@@ -6,8 +6,10 @@
         method = $('#method');
         mathTarget = $('#math-target');
         message = $('#message');
+        blockSize = $('#blocksize');
+        displayContent = $('#display-content');
 
-        buildDefaultData();
+        buildDefaultData(rows*columns);
         populateSquares();
 
         input.keyup(onInput);
@@ -22,6 +24,63 @@
         });
         method.change(onInput);
         mathTarget.change(onInput);
+        blockSize.change(function(){
+            displayContent.prop('checked', true);
+            var cssClass = blockSize.val();
+            switch(cssClass){
+                case 'pixel':
+                    rows = columns = 1050;
+                    break;
+                case 'xsmall':
+                    rows = columns = 69;
+                    break;
+                case 'small':
+                    rows = columns = 41;
+                    break;
+                case 'medium':
+                    rows = columns = 15;
+                    break;
+                case 'large':
+                    rows = columns = 10;
+                    break;
+                case 'xlarge':
+                    rows = columns = 5;
+                    break;
+                case 'spiral':
+                    input.addClass('loading');
+                    $.ajax({
+                        type: "GET",
+                        url: "/spiral",
+                        dataType: "json",
+                        success: function(smartResults){
+                            input.removeClass('loading');
+                            console.log("AJAX", smartResults);
+                            data = smartResults;
+                            rows = columns = 21;
+                            populateSquares();
+                        },
+                        error: function(error){
+                            input.removeClass('loading');
+                            throw "Ajax error!";
+                        }
+                    });
+                    return;
+                default:
+                    rows = columns = 21;
+            }
+            buildDefaultData(rows*columns);
+            populateSquares();
+            if(cssClass.length){
+                squares.find('.square').addClass(cssClass);
+            }
+        });
+        displayContent.click(function(){
+            if(displayContent.is(':checked')){
+                squares.find('.square').removeClass('hidetext');
+            } else {
+                squares.find('.square').addClass('hidetext');
+            }
+        });
 
 
         onInput({});
@@ -35,6 +94,8 @@
     var method;
     var mathTarget;
     var message;
+    var blockSize;
+    var displayContent;
 
     var methods = {
         REGEX: 0,
@@ -200,15 +261,17 @@
         message.removeClass('invalid').text(matches + ' matches');
     }
 
-    function buildDefaultData(){
-        for(var i = 0; i < 441; i++){
-            data.push(i);
+    function buildDefaultData(length){
+        data = [];
+        for(var i = 0; i < length; i++){
+            data.push(i + 1);
         }
     }
 
     function populateSquares(){
+        squares.empty();
         $(data).each(function(){
-            squares.append('<div class="square red" title="' + (parseInt(this) + 1) + '">' + (parseInt(this) + 1) + '</div>');
+            squares.append('<div class="square red" title="' + this + '">' + this + '</div>');
         });
     }
 }());
