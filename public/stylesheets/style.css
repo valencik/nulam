@@ -11,19 +11,12 @@ h1 {
   text-align: center;
   font-size: 2.5em;
 }
-input {
-  height: 25px;
-  width: 200px;
-  font-size: 15px;
+.wrapper {
+  width: 1000px;
+  margin: auto;
 }
 #input {
-  width: 100%;
-  margin: auto;
   text-align: center;
-}
-#method {
-  font-size: 25px;
-  margin: 1.25px 0 0 -15px;
 }
 #verify-message {
   width: 100%;
@@ -39,14 +32,17 @@ input {
   text-align: right;
 }
 #squares {
-  width: 1000px;
-  margin: auto;
+  text-align: center;
 }
 #squares .square {
   height: 46px;
   width: 46px;
   margin: 2px;
   display: inline-block;
+}
+#squares .square.pixel {
+  height: 1px;
+  width: 1px;
 }
 #squares .square.red {
   background: #E80939;
