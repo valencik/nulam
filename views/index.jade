@@ -15,7 +15,7 @@ block content
   div#form.row
     div.wrapper
       div.col-md-10
-        input#input.form-control(value="^[468]9$|^[579]2$|^1[4]9|^1[5][012]|133|128")
+        input#input.form-control(value="^(11)[47]$|^(13)[58]$|^(15)[69]$|2[2][0-2]|219|197|202")
       div.col-md-2
         select#method.form-control
           option(value=0)="RegEx"
@@ -25,5 +25,19 @@ block content
   div.row
     div#verify-message
       span#message
+  //div.row
+    div.col-md-8
+    div.col-md-2
+      select#blocksize.form-control
+        option(value=0)="Default"
+        option(value=1)="Pixel"
+        option(value=2)="X Small"
+        option(value=3)="Small"
+        option(value=4)="Medium"
+        option(value=5)="Large"
+        option(value=6)="X Large"
+    div.col-md-2
+      | Display Block Contents: 
+      input(type='checkbox', checked=true)
   #squares.wrapper
 
