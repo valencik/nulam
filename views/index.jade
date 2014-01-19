@@ -22,6 +22,16 @@ block content
           option(value=1)="Math"
           option(value=2)="Boolean"
           option(value=3)="OEIS"
+  div#advanced.wrapper.row
+    div.row.math
+      div.col-md-1
+        label.label.label-primary Target
+      div.col-md-11
+        select#math-target.form-control
+          option(value=0)="Block Value"
+          option(value=1)="Array Index"
+          option(value=2)="Row"
+          option(value=3)="Column"
   div.row
     div#verify-message
       span#message

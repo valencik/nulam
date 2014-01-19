@@ -4,6 +4,7 @@
         squares = $('#squares');
         input = $('#input');
         method = $('#method');
+        mathTarget = $('#math-target');
         message = $('#message');
 
         buildDefaultData();
@@ -11,13 +12,19 @@
 
         input.keyup(onInput);
         method.change(function(event){
-           if($(this).val() == methods.OEIS){
-               event.stopImmediatePropagation();
-           }
+            var advanced = $('#advanced');
+            advanced.removeClass('math');
+            if($(this).val() == methods.OEIS){
+                event.stopImmediatePropagation();
+            } else if($(this).val() == methods.MATH){
+                advanced.addClass('math');
+            }
         });
         method.change(onInput);
+        mathTarget.change(onInput);
 
-        onInput();
+
+        onInput({});
     });
 
     var data = [];
@@ -26,6 +33,7 @@
     var squares;
     var input;
     var method;
+    var mathTarget;
     var message;
 
     var methods = {
@@ -55,7 +63,7 @@
                 row:2,
                 column:3
             },
-            target:2,
+            target:0,
             test: function(value, index, x, y){
                 var checkValue;
                 switch(this.target){
@@ -112,13 +120,14 @@
 
     var oesiTimeout;
 
-    function onInput(){
+    function onInput(event){
         var userInput = input.val();
         if(userInput.length){
             var criteria;
             switch(parseInt(method.val())){
                 case methods.MATH:
                     criteria = criteriaMath();
+                    criteria.target = parseInt(mathTarget.val());
                     break;
                 case methods.BOOLEAN:
                     criteria = criteriaBoolean();
@@ -130,7 +139,6 @@
                     };
                     if(oesiTimeout){
                         clearTimeout(oesiTimeout);
-
                     }
                     oesiTimeout = setTimeout(function(){
                         input.addClass('loading');
@@ -153,7 +161,7 @@
                         });
                     }, 1000);
 
-                    break;
+                    return;
                 case methods.REGEX:
                 default:
                     criteria = criteriaRegex();

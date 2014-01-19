@@ -18,6 +18,12 @@ h1 {
 .loading {
   background: url('http://www.hsi.com.hk/HSI-Net/pages/images/en/share/ajax-loader.gif') no-repeat right center;
 }
+#advanced .math {
+  display: none;
+}
+#advanced.math .math {
+  display: block;
+}
 #verify-message {
   width: 100%;
   text-align: center;
