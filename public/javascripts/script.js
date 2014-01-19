@@ -7,7 +7,8 @@
         method = $('#method');
         message = $('#message');
 
-        buildData();
+        buildDefaultData();
+        populateSquares();
 
         input.keyup(onInput);
         method.change(onInput);
@@ -86,8 +87,8 @@
         }
     }
 
-    var rows = 10;
-    var columns = 20;
+    var rows = 21;
+    var columns = 21;
 
     var oesiTimeout;
 
@@ -175,13 +176,15 @@
         message.removeClass('invalid').text(matches + ' matches');
     }
 
-    function buildData(){
-        for(var i = 0; i < 200; i++){
+    function buildDefaultData(){
+        for(var i = 0; i < 441; i++){
             data.push(i);
         }
+    }
 
-        for(var elem in data){
-            squares.append('<div class="square red">' + (parseInt(elem) + 1) + '</div>');
-        }
+    function populateSquares(){
+        $(data).each(function(){
+            squares.append('<div class="square red" title="' + (parseInt(this) + 1) + '">' + (parseInt(this) + 1) + '</div>');
+        });
     }
 }());
