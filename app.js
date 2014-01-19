@@ -13,6 +13,7 @@ var http = require('http');
 var path = require('path');
 var $ = require('cheerio')
 var request = require('request')
+var nUlamdbProvider = require('./nUlamdbHandler.js').nUlamdbProvider;
 
 // environment setup
 var app = express();
@@ -32,19 +33,24 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+// Setup the mongo handler. Specify local and port number.
+var nUlamdbGrab = new nUlamdbProvider('127.0.0.1', 27017);
+
+
+
 // routes
 app.get('/', routes.index);
 
 app.post('/smartGrab', function(req, res){
   console.log("Recieved :", req.body);
-
   var param = req.body.smartInput;
-  console.log(param);
 
+  //check if direct A###### sequence search
   if(/^A\d{6}$/.test(param)){
       param = "id:"+param;
   }
 
+  //scrape OEIS with cheerio
   var domain = 'http://oeis.org/search?q=' + param;
   request(domain, function gotHTML(err, resp, html) {
     if (err) return console.error(err);
@@ -55,9 +61,19 @@ app.post('/smartGrab', function(req, res){
       return $(this).attr('width') === '710';
     }).children().first().text();
     console.log("OEIS int sequence: ", table710ttnums);
-    res.send("[" + table710ttnums + "]");
-  });
-});
+    OEISresponse = "[" + table710ttnums + "]";
+
+    //save new nUlamdb_item
+    nUlamdbGrab.save({
+        title: param,
+        data: OEISresponse
+    }, function( error, docs) {
+         res.send(OEISresponse);
+       });
+
+  }); //end request
+
+}); //end POST
 
 
 
