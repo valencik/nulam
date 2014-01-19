@@ -42,37 +42,51 @@ var nUlamdbGrab = new nUlamdbProvider('127.0.0.1', 27017);
 app.get('/', routes.index);
 
 app.post('/smartGrab', function(req, res){
-  console.log("Recieved :", req.body);
+  console.log("#POST Recieved :", req.body);
   var param = req.body.smartInput;
+  console.log("#Searching for: ", param);
 
   //check if direct A###### sequence search
   if(/^A\d{6}$/.test(param)){
       param = "id:"+param;
   }
 
-  //scrape OEIS with cheerio
-  var domain = 'http://oeis.org/search?q=' + param;
-  request(domain, function gotHTML(err, resp, html) {
-    if (err) return console.error(err);
-    var parsedHTML = $.load(html);
-  
-    var table710ttnums = parsedHTML('td').filter(function(i, el) {
-      // integer sequence is in child of td(width=710)
-      return $(this).attr('width') === '710';
-    }).children().first().text();
-    console.log("OEIS int sequence: ", table710ttnums);
-    OEISresponse = "[" + table710ttnums + "]";
+  //check database for previously stored items
+  nUlamdbGrab.findAll({title: param},
+    function(error, nUlamdb_items){
+      console.log("#nUlamDB found : ", nUlamdb_items);
+      if (nUlamdb_items.length == 0) {
 
-    //save new nUlamdb_item
-    nUlamdbGrab.save({
-        title: param,
-        data: OEISresponse
-    }, function( error, docs) {
-         res.send(OEISresponse);
-       });
+        //scrape OEIS with cheerio
+        var domain = 'http://oeis.org/search?q=' + param;
+        console.log("#Requesting (OEIS): " + param);
+        request(domain, function gotHTML(err, resp, html) {
+          if (err) return console.error(err);
+          var parsedHTML = $.load(html);
+          var table710ttnums = parsedHTML('td').filter(function(i, el) {
+            // integer sequence is in child of td(width=710)
+            return $(this).attr('width') === '710';
+          }).children().first().text();
+          console.log("#OEIS Returned: ", table710ttnums);
+          OEISresponse = "[" + table710ttnums + "]";
+      
+          //save new nUlamdb_item
+          nUlamdbGrab.save({title: param, data: OEISresponse},
+            function( error, docs){
+              res.send(OEISresponse);
+            }
+          );
+      
+        }); //end request
 
-  }); //end request
-
+      }
+      else {
+        //use nUlamdb_items  
+        res.send(nUlamdb_items[0].data);
+        console.log("#Sending nUlam_items: " +nUlamdb_items[0].data);
+      }
+    }
+  );
 }); //end POST
 
 
