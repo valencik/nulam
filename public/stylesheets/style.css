@@ -1,3 +1,7 @@
+/*
+block size
+show content
+*/
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -25,7 +29,6 @@ h1 {
   display: block;
 }
 #verify-message {
-  width: 100%;
   text-align: center;
   font-size: 15px;
 }
@@ -40,41 +43,50 @@ h1 {
   width: 46px;
   margin: 2px;
   display: inline-block;
+  font-size: 15px;
 }
 #squares .square.pixel {
   height: 1px;
   width: 1px;
   margin: 0;
-  color: transparent;
+  font-size: 0.3px;
 }
 #squares .square.xsmall {
-  height: 13px;
-  width: 13px;
+  height: 13.217391304347826px;
+  width: 13.217391304347826px;
   margin: 1px;
+  font-size: 4.565217391304348px;
 }
 #squares .square.small {
-  height: 23px;
-  width: 23px;
+  height: 23.609756097560975px;
+  width: 23.609756097560975px;
   margin: 1px;
+  font-size: 7.682926829268292px;
 }
 #squares .square.medium {
-  height: 71px;
-  width: 71px;
+  height: 66px;
+  width: 66px;
   margin: 2px;
+  font-size: 21px;
 }
 #squares .square.large {
   height: 101px;
   width: 101px;
   margin: 2px;
+  font-size: 31.5px;
 }
 #squares .square.xlarge {
   height: 206px;
   width: 206px;
   margin: 2px;
+  font-size: 63px;
 }
 #squares .square.red {
   background: #E80939;
 }
 #squares .square.green {
   background: #12A106;
+}
+#squares .square.hidetext {
+  color: transparent;
 }
