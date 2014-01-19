@@ -201,6 +201,7 @@
                     if(oesiTimeout){
                         clearTimeout(oesiTimeout);
                     }
+                    var timeoutValue = (event.which == 13) ? 0 : 2000;
                     oesiTimeout = setTimeout(function(){
                         input.addClass('loading');
                         $.ajax({
@@ -220,7 +221,7 @@
                                 throw "Ajax error!";
                             }
                         });
-                    }, 1000);
+                    }, timeoutValue);
 
                     return;
                 case methods.REGEX:
