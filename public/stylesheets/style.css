@@ -12,11 +12,11 @@ h1 {
   font-size: 2.5em;
 }
 .wrapper {
-  width: 1000px;
+  width: 1050px;
   margin: auto;
 }
-#input {
-  text-align: center;
+.loading {
+  background: url('http://www.hsi.com.hk/HSI-Net/pages/images/en/share/ajax-loader.gif') no-repeat right center;
 }
 #verify-message {
   width: 100%;
@@ -25,11 +25,6 @@ h1 {
 }
 #message.invalid {
   color: red;
-}
-#smartform {
-  margin: 0 auto 10px auto;
-  width: 1000px;
-  text-align: right;
 }
 #squares {
   text-align: center;
@@ -43,6 +38,33 @@ h1 {
 #squares .square.pixel {
   height: 1px;
   width: 1px;
+  margin: 0;
+  color: transparent;
+}
+#squares .square.xsmall {
+  height: 13px;
+  width: 13px;
+  margin: 1px;
+}
+#squares .square.small {
+  height: 23px;
+  width: 23px;
+  margin: 1px;
+}
+#squares .square.medium {
+  height: 71px;
+  width: 71px;
+  margin: 2px;
+}
+#squares .square.large {
+  height: 101px;
+  width: 101px;
+  margin: 2px;
+}
+#squares .square.xlarge {
+  height: 206px;
+  width: 206px;
+  margin: 2px;
 }
 #squares .square.red {
   background: #E80939;
