@@ -1,5 +1,6 @@
 #squares
 {
+  text-align: center;
 
   .square
   {
@@ -7,6 +8,52 @@
     width: 46px;
     margin: 2px;
     display: inline-block;
+
+    &.pixel
+    {
+      height: 1px;
+      width: 1px;
+      margin: 0;
+      color: transparent;
+    }
+
+    &.xsmall
+    {
+      height: 13px;
+      width: 13px;
+      margin: 1px;
+
+    }
+
+    &.small
+    {
+      height: 23px;
+      width: 23px;
+      margin: 1px;
+
+    }
+
+    &.medium
+    {
+      height: 71px;
+      width: 71px;
+      margin: 2px;
+    }
+
+    &.large
+    {
+      height: 101px;
+      width: 101px;
+      margin: 2px;
+
+    }
+
+    &.xlarge
+    {
+      height: 206px;
+      width: 206px;
+      margin: 2px;
+    }
 
     &.red
     {
