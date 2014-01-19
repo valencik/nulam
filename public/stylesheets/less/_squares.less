@@ -1,58 +1,64 @@
+@import "_config";
+
 #squares
 {
   text-align: center;
 
   .square
   {
-    height: 46px;
-    width: 46px;
+    height: ((@width / @squareDefault) - 4);
+    width: ((@width / @squareDefault) - 4);
     margin: 2px;
     display: inline-block;
+    font-size: ((@width / @squareDefault) * .3);
 
     &.pixel
     {
-      height: 1px;
-      width: 1px;
+      height: (@width / @squarePixel);
+      width: (@width / @squarePixel);
       margin: 0;
-      color: transparent;
+      font-size: ((@width / @squarePixel) * .3);
     }
 
     &.xsmall
     {
-      height: 13px;
-      width: 13px;
+      height: ((@width / @squareXsmall) - 2);
+      width: ((@width / @squareXsmall) - 2);
       margin: 1px;
+      font-size: ((@width / @squareXsmall) * .3);
 
     }
 
     &.small
     {
-      height: 23px;
-      width: 23px;
+      height: ((@width / @squareSmall) - 2);
+      width: ((@width / @squareSmall) - 2);
       margin: 1px;
-
+      font-size: ((@width / @squareSmall) * .3);
     }
 
     &.medium
     {
-      height: 71px;
-      width: 71px;
+      height: ((@width / @squareMedium) - 4);
+      width: ((@width / @squareMedium) - 4);
       margin: 2px;
+      font-size: ((@width / @squareMedium) * .3);
     }
 
     &.large
     {
-      height: 101px;
-      width: 101px;
+      height: ((@width / @squareLarge) - 4);
+      width: ((@width / @squareLarge) - 4);
       margin: 2px;
-
+      font-size: ((@width / @squareLarge) * .3);
     }
 
     &.xlarge
     {
-      height: 206px;
-      width: 206px;
+      height: ((@width / @squareXlarge) - 4);
+      width: ((@width / @squareXlarge) - 4);
       margin: 2px;
+      font-size: ((@width / @squareXlarge) * .3);
     }
 
     &.red
@@ -63,6 +69,11 @@
     &.green 
     {
       background: #12A106;
+    }
+
+    &.hidetext
+    {
+      color: transparent;
     }
   }
 }

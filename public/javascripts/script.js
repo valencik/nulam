@@ -3,22 +3,87 @@
     $(document).ready(function(){
         squares = $('#squares');
         input = $('#input');
-        smartInput = $('#smart-input');
         method = $('#method');
+        mathTarget = $('#math-target');
         message = $('#message');
+        blockSize = $('#blocksize');
+        displayContent = $('#display-content');
 
-        buildDefaultData();
+        buildDefaultData(rows*columns);
         populateSquares();
 
         input.keyup(onInput);
+        method.change(function(event){
+            var advanced = $('#advanced');
+            advanced.removeClass('math');
+            if($(this).val() == methods.OEIS){
+                event.stopImmediatePropagation();
+            } else if($(this).val() == methods.MATH){
+                advanced.addClass('math');
+            }
+        });
         method.change(onInput);
-        smartInput.keydown(function( event ) {
-          if ( event.which == 13 ) {
-          onSmartInput();
-          }
+        mathTarget.change(onInput);
+        blockSize.change(function(){
+            displayContent.prop('checked', true);
+            var cssClass = blockSize.val();
+            switch(cssClass){
+                case 'pixel':
+                    rows = columns = 1050;
+                    break;
+                case 'xsmall':
+                    rows = columns = 69;
+                    break;
+                case 'small':
+                    rows = columns = 41;
+                    break;
+                case 'medium':
+                    rows = columns = 15;
+                    break;
+                case 'large':
+                    rows = columns = 10;
+                    break;
+                case 'xlarge':
+                    rows = columns = 5;
+                    break;
+                case 'spiral':
+                    input.addClass('loading');
+                    $.ajax({
+                        type: "GET",
+                        url: "/spiral",
+                        dataType: "json",
+                        success: function(smartResults){
+                            input.removeClass('loading');
+                            console.log("AJAX", smartResults);
+                            data = smartResults;
+                            rows = columns = 21;
+                            populateSquares();
+                        },
+                        error: function(error){
+                            input.removeClass('loading');
+                            throw "Ajax error!";
+                        }
+                    });
+                    return;
+                default:
+                    rows = columns = 21;
+            }
+            buildDefaultData(rows*columns);
+            populateSquares();
+            if(cssClass.length){
+                squares.find('.square').addClass(cssClass);
+            }
+        });
+        displayContent.click(function(){
+            if(displayContent.is(':checked')){
+                squares.find('.square').removeClass('hidetext');
+            } else {
+                squares.find('.square').addClass('hidetext');
+            }
         });
 
-        onInput();
+
+        onInput({});
     });
 
     var data = [];
@@ -26,9 +91,11 @@
     //dom elements
     var squares;
     var input;
-    var smartInput;
     var method;
+    var mathTarget;
     var message;
+    var blockSize;
+    var displayContent;
 
     var methods = {
         REGEX: 0,
@@ -51,13 +118,35 @@
         return {
             type: 1,
             input: "",
-
+            targets: {
+                value:0,
+                index:1,
+                row:2,
+                column:3
+            },
+            target:0,
             test: function(value, index, x, y){
+                var checkValue;
+                switch(this.target){
+                    case this.targets.index:
+                        checkValue = index;
+                        break;
+                    case this.targets.row:
+                        checkValue = y;
+                        break;
+                    case this.target.column:
+                        checkValue = x;
+                        break;
+                    case this.targets.value:
+                    default:
+                        checkValue = parseFloat(value);
+                        break;
+                }
                 var thisCriteria = this.input.replace(/n/g, index.toString());
                 thisCriteria = thisCriteria.replace(/x/g, value);
                 thisCriteria = thisCriteria.replace(/r/g, y);
                 thisCriteria = thisCriteria.replace(/c/g, x);
-                return eval(thisCriteria) === parseFloat(value);
+                return eval(thisCriteria) === checkValue;
             }
         }
     }
@@ -92,13 +181,14 @@
 
     var oesiTimeout;
 
-    function onInput(){
+    function onInput(event){
         var userInput = input.val();
         if(userInput.length){
             var criteria;
             switch(parseInt(method.val())){
                 case methods.MATH:
                     criteria = criteriaMath();
+                    criteria.target = parseInt(mathTarget.val());
                     break;
                 case methods.BOOLEAN:
                     criteria = criteriaBoolean();
@@ -110,7 +200,6 @@
                     };
                     if(oesiTimeout){
                         clearTimeout(oesiTimeout);
-
                     }
                     oesiTimeout = setTimeout(function(){
                         input.addClass('loading');
@@ -133,7 +222,7 @@
                         });
                     }, 1000);
 
-                    break;
+                    return;
                 case methods.REGEX:
                 default:
                     criteria = criteriaRegex();
@@ -142,10 +231,6 @@
             criteria.input = userInput;
             startVisualization(criteria);
         }
-    }
-
-    function onSmartInput(){
-
     }
 
     function startVisualization(criteria){
@@ -176,15 +261,17 @@
         message.removeClass('invalid').text(matches + ' matches');
     }
 
-    function buildDefaultData(){
-        for(var i = 0; i < 441; i++){
-            data.push(i);
+    function buildDefaultData(length){
+        data = [];
+        for(var i = 0; i < length; i++){
+            data.push(i + 1);
         }
     }
 
     function populateSquares(){
+        squares.empty();
         $(data).each(function(){
-            squares.append('<div class="square red" title="' + (parseInt(this) + 1) + '">' + (parseInt(this) + 1) + '</div>');
+            squares.append('<div class="square red" title="' + this + '">' + this + '</div>');
         });
     }
 }());

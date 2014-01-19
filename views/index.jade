@@ -15,15 +15,39 @@ block content
   div#form.row
     div.wrapper
       div.col-md-10
-        input#input.form-control(value="^[468]9$|^[579]2$|^1[4]9|^1[5][012]|133|128")
+        input#input.form-control(value="^(11)[47]$|^(13)[58]$|^(15)[69]$|2[2][0-2]|219|197|202")
       div.col-md-2
         select#method.form-control
           option(value=0)="RegEx"
           option(value=1)="Math"
           option(value=2)="Boolean"
           option(value=3)="OEIS"
+  div#advanced.wrapper.row
+    div.wrapper.row.math
+      div.col-md-1
+        label.label.label-primary Target
+      div.col-md-11
+        select#math-target.form-control
+          option(value=0)="Block Value"
+          option(value=1)="Array Index"
+          option(value=2)="Row"
+          option(value=3)="Column"
   div.row
     div#verify-message
       span#message
+  div.row.wrapper
+    div.col-md-2
+      select#blocksize.form-control
+        //option(value="pixel")="Pixel"
+        option(value="xsmall")="X Small"
+        option(value="small")="Small"
+        option(value="" selected="selected")="Default"
+        option(value="medium")="Medium"
+        option(value="large")="Large"
+        option(value="xlarge")="X Large"
+        option(value="spiral")="Spiral"
+    div.col-md-4
+      label Display Block Contents:
+      input#display-content(type='checkbox', checked=true)
   #squares.wrapper
 
